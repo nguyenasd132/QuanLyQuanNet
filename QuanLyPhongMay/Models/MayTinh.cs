@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace QuanLyPhongMay.Models
 {
-    internal class MayTinh
+    public class MayTinh
     {
+        public string MaMay { get; set; }
+        public string TenMay { get; set; }
+        public string TrangThai { get; set; } // Sẽ có 3 trạng thái: Hoạt động, Hư hỏng, Bảo trì
     }
 }
