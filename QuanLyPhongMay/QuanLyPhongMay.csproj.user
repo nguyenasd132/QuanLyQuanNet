@@ -4,8 +4,23 @@
     <Compile Update="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Views\FormQuanLyThietBi.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Views\FormSoDo.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\FormThemSuaMay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\FormThemThietBiMoi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\MapCanvasPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Views\MayTinhControl.cs">
+      <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
 </Project>

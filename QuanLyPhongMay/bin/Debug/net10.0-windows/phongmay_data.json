@@ -1,0 +1,182 @@
+[
+  {
+    "MaMay": "M01",
+    "TenMay": "M\u00E1y 01",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 20,
+    "ViTriY": 20,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M02",
+    "TenMay": "M\u00E1y 02",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 160,
+    "ViTriY": 20,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M03",
+    "TenMay": "M\u00E1y 03",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 280,
+    "ViTriY": 20,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M04",
+    "TenMay": "M\u00E1y 04",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 410,
+    "ViTriY": 20,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M05",
+    "TenMay": "M\u00E1y 05",
+    "TrangThai": "H\u01B0 h\u1ECFng",
+    "ViTriX": 537,
+    "ViTriY": 23,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M06",
+    "TenMay": "M\u00E1y 06",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 20,
+    "ViTriY": 135,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M07",
+    "TenMay": "M\u00E1y 07",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 150,
+    "ViTriY": 135,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M08",
+    "TenMay": "M\u00E1y 08",
+    "TrangThai": "B\u1EA3o tr\u00EC",
+    "ViTriX": 280,
+    "ViTriY": 135,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M09",
+    "TenMay": "M\u00E1y 09",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 400,
+    "ViTriY": 140,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M10",
+    "TenMay": "M\u00E1y 10",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 540,
+    "ViTriY": 140,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M11",
+    "TenMay": "M\u00E1y 11",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 20,
+    "ViTriY": 250,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M12",
+    "TenMay": "M\u00E1y 12",
+    "TrangThai": "H\u01B0 h\u1ECFng",
+    "ViTriX": 150,
+    "ViTriY": 250,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M13",
+    "TenMay": "M\u00E1y 13",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 280,
+    "ViTriY": 250,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M14",
+    "TenMay": "M\u00E1y 14",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 410,
+    "ViTriY": 250,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M15",
+    "TenMay": "M\u00E1y 15",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 540,
+    "ViTriY": 240,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M16",
+    "TenMay": "M\u00E1y 16",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 20,
+    "ViTriY": 365,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M17",
+    "TenMay": "M\u00E1y 17",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 150,
+    "ViTriY": 365,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M18",
+    "TenMay": "M\u00E1y 18",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 280,
+    "ViTriY": 365,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M19",
+    "TenMay": "M\u00E1y 19",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 400,
+    "ViTriY": 360,
+    "GhiChu": "",
+    "DaKhoa": false
+  },
+  {
+    "MaMay": "M20",
+    "TenMay": "M\u00E1y 20",
+    "TrangThai": "Ho\u1EA1t \u0111\u1ED9ng",
+    "ViTriX": 540,
+    "ViTriY": 360,
+    "GhiChu": "",
+    "DaKhoa": false
+  }
+]
