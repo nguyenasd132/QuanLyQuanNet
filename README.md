@@ -146,7 +146,7 @@ QuanLyPhongMay/
 
 ### Cách 1: Chạy ngay không cần mở Visual Studio (Khuyên dùng)
 Dự án đã được đóng gói sẵn bản thực thi độc lập, bạn có thể chọn 1 trong 3 cách:
-- **Chạy nhanh 1-Click:** Bấm đúp vào file **`ChayNgay_QuanLyPhongMay.bat`** ở thư mục gốc.
+- **Chạy nhanh 1-Click:** Bấm đúp vào file **`moQuanLyPhongMay.bat`** ở thư mục gốc.
 - **Cài đặt Shortcut ra Desktop:** Bấm đúp vào file **`CaiDat_QuanLyPhongMay.bat`** để tự động tạo biểu tượng **`QuanLyPhongMay`** ngoài màn hình Desktop và khởi chạy ứng dụng.
 - **Mở trực tiếp file `.exe`:** Truy cập thư mục **`BanChayNgay_Portable/`** và chạy **`QuanLyPhongMay.exe`**.
 
