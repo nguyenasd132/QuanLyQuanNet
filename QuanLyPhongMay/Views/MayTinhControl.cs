@@ -52,16 +52,18 @@ namespace QuanLyPhongMay.Views
         public event EventHandler<MayTinh>? AttemptDragWhileLocked;
         public event EventHandler<MayTinh>? RequestManageComponents;
 
-        // Biến phục vụ kéo thả
+        // Biến phục vụ kéo thả & tỷ lệ co giãn theo màn hình
         private bool isDragging = false;
         private Point dragStartPoint;
         private bool isHovered = false;
         private ToolTip toolTipInfo;
+        private float _scaleX = 1.0f;
+        private float _scaleY = 1.0f;
 
         public MayTinhControl(MayTinh data)
         {
             Data = data;
-            // Kích thước mở rộng để hiển thị trực tiếp danh sách linh kiện & tình trạng thiết bị
+            // Kích thước chuẩn tham chiếu để hiển thị trực tiếp danh sách linh kiện & tình trạng thiết bị
             this.Size = new Size(165, 195);
             this.Location = new Point(data.ViTriX, data.ViTriY);
             this.DoubleBuffered = true;
@@ -94,10 +96,31 @@ namespace QuanLyPhongMay.Views
             };
         }
 
+        public void ApplyCanvasScale(float scaleX, float scaleY)
+        {
+            _scaleX = Math.Clamp(scaleX, 0.65f, 1.50f);
+            _scaleY = Math.Clamp(scaleY, 0.65f, 1.50f);
+
+            int w = Math.Clamp((int)Math.Round(165 * _scaleX), 112, 240);
+            int h = Math.Clamp((int)Math.Round(195 * _scaleY), 135, 280);
+            int x = Math.Max(6, (int)Math.Round(Data.ViTriX * _scaleX));
+            int y = Math.Max(6, (int)Math.Round(Data.ViTriY * _scaleY));
+
+            if (!isDragging)
+            {
+                this.SetBounds(x, y, w, h);
+            }
+            else
+            {
+                this.Size = new Size(w, h);
+            }
+            this.Invalidate();
+        }
+
         public void CapNhatThongTin(MayTinh data)
         {
             Data = data;
-            this.Location = new Point(data.ViTriX, data.ViTriY);
+            ApplyCanvasScale(_scaleX, _scaleY);
             CapNhatToolTip();
             SetupContextMenu();
             Invalidate();
@@ -253,8 +276,15 @@ namespace QuanLyPhongMay.Views
                 if (newX != this.Left || newY != this.Top)
                 {
                     this.Location = new Point(newX, newY);
-                    Data.ViTriX = newX;
-                    Data.ViTriY = newY;
+                    int logicalX = Math.Max(0, (int)Math.Round(newX / Math.Max(0.5f, _scaleX)));
+                    int logicalY = Math.Max(0, (int)Math.Round(newY / Math.Max(0.5f, _scaleY)));
+                    if (SnapToGrid && GridSize > 1)
+                    {
+                        logicalX = (int)Math.Round((double)logicalX / GridSize) * GridSize;
+                        logicalY = (int)Math.Round((double)logicalY / GridSize) * GridSize;
+                    }
+                    Data.ViTriX = logicalX;
+                    Data.ViTriY = logicalY;
                     PositionChanged?.Invoke(this, Data);
                 }
             }
@@ -270,12 +300,26 @@ namespace QuanLyPhongMay.Views
             }
         }
 
+        protected override void OnDpiChangedAfterParent(EventArgs e)
+        {
+            base.OnDpiChangedAfterParent(e);
+            Invalidate();
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            // Tỷ lệ co giãn động dựa trên kích thước thực của Control (hỗ trợ màn hình to/nhỏ và High-DPI)
+            float sx = Width / 165f;
+            float sy = Height / 195f;
+            float sfFont = Math.Clamp(Math.Min(sx, sy), 0.72f, 1.32f);
+            int Sx(int val) => (int)Math.Round(val * sx);
+            int Sy(int val) => (int)Math.Round(val * sy);
+            float Fpt(float pt) => Math.Max(5.8f, pt * sfFont);
 
             Rectangle rect = new Rectangle(0, 0, Width - 1, Height - 1);
 
@@ -335,7 +379,7 @@ namespace QuanLyPhongMay.Views
             }
 
             // Vẽ nền Card
-            using (GraphicsPath path = GetRoundedRectangle(rect, 8))
+            using (GraphicsPath path = GetRoundedRectangle(rect, Sx(8)))
             {
                 using (SolidBrush brushBg = new SolidBrush(bgCard))
                 {
@@ -344,21 +388,21 @@ namespace QuanLyPhongMay.Views
 
                 if (isHovered && !isSelected)
                 {
-                    using (Pen penHover = new Pen(Color.FromArgb(96, 165, 250), 2))
+                    using (Pen penHover = new Pen(Color.FromArgb(96, 165, 250), 2f * sx))
                     {
                         g.DrawPath(penHover, path);
                     }
                 }
                 else if (isSelected)
                 {
-                    using (Pen penSelected = new Pen(Color.FromArgb(37, 99, 235), 3))
+                    using (Pen penSelected = new Pen(Color.FromArgb(37, 99, 235), 3f * sx))
                     {
                         g.DrawPath(penSelected, path);
                     }
                 }
                 else
                 {
-                    using (Pen penBorder = new Pen(borderColor, coThietBiLoi ? 2f : 1.5f))
+                    using (Pen penBorder = new Pen(borderColor, (coThietBiLoi ? 2f : 1.5f) * sx))
                     {
                         g.DrawPath(penBorder, path);
                     }
@@ -366,28 +410,28 @@ namespace QuanLyPhongMay.Views
             }
 
             // 1. Icon màn hình máy tính
-            int iconX = 12;
-            int iconY = 8;
-            int iconW = 28;
-            int iconH = 20;
+            int iconX = Sx(12);
+            int iconY = Sy(8);
+            int iconW = Sx(28);
+            int iconH = Sy(20);
 
             using (SolidBrush brushScreen = new SolidBrush(screenBg))
-            using (Pen penScreen = new Pen(screenIconColor, 1.5f))
+            using (Pen penScreen = new Pen(screenIconColor, 1.5f * sx))
             {
                 g.FillRectangle(brushScreen, iconX, iconY, iconW, iconH);
                 g.DrawRectangle(penScreen, iconX, iconY, iconW, iconH);
-                g.DrawLine(penScreen, iconX + iconW / 2, iconY + iconH, iconX + iconW / 2, iconY + iconH + 3);
-                g.DrawLine(penScreen, iconX + 6, iconY + iconH + 3, iconX + iconW - 6, iconY + iconH + 3);
+                g.DrawLine(penScreen, iconX + iconW / 2, iconY + iconH, iconX + iconW / 2, iconY + iconH + Sy(3));
+                g.DrawLine(penScreen, iconX + Sx(6), iconY + iconH + Sy(3), iconX + iconW - Sx(6), iconY + iconH + Sy(3));
             }
 
             // 2. Tên máy & Mã máy
-            using (Font fontTen = new Font("Segoe UI", 9.5F, FontStyle.Bold))
-            using (Font fontMa = new Font("Segoe UI", 7.5F, FontStyle.Regular))
+            using (Font fontTen = new Font("Segoe UI", Fpt(9.5F), FontStyle.Bold))
+            using (Font fontMa = new Font("Segoe UI", Fpt(7.5F), FontStyle.Regular))
             using (SolidBrush brushTen = new SolidBrush(Color.FromArgb(15, 23, 42)))
             using (SolidBrush brushMa = new SolidBrush(Color.FromArgb(100, 116, 139)))
             {
-                g.DrawString(Data.TenMay, fontTen, brushTen, new PointF(46, 7));
-                g.DrawString($"ID: {Data.MaMay}", fontMa, brushMa, new PointF(47, 24));
+                g.DrawString(Data.TenMay, fontTen, brushTen, new PointF(Sx(46), Sy(7)));
+                g.DrawString($"ID: {Data.MaMay}", fontMa, brushMa, new PointF(Sx(47), Sy(24)));
             }
 
             // 3. Badge trạng thái máy
@@ -397,11 +441,11 @@ namespace QuanLyPhongMay.Views
                 txtStatus = $"Lỗi {Data.SoThietBiHuHong()} TB";
             }
 
-            Rectangle tagRect = new Rectangle(10, 42, Width - 20, 20);
-            using (GraphicsPath tagPath = GetRoundedRectangle(tagRect, 4))
+            Rectangle tagRect = new Rectangle(Sx(10), Sy(42), Width - Sx(20), Sy(20));
+            using (GraphicsPath tagPath = GetRoundedRectangle(tagRect, Sx(4)))
             using (SolidBrush brushTagBg = new SolidBrush(tagBg))
-            using (Pen penTagBorder = new Pen(tagBorder, 1))
-            using (Font fontTag = new Font("Segoe UI", 8F, FontStyle.Bold))
+            using (Pen penTagBorder = new Pen(tagBorder, 1f))
+            using (Font fontTag = new Font("Segoe UI", Fpt(8F), FontStyle.Bold))
             using (SolidBrush brushTagText = new SolidBrush(tagText))
             {
                 g.FillPath(brushTagBg, tagPath);
@@ -412,28 +456,28 @@ namespace QuanLyPhongMay.Views
             }
 
             // Đường gạch ngăn cách
-            using (Pen penDiv = new Pen(Color.FromArgb(226, 232, 240), 1))
+            using (Pen penDiv = new Pen(Color.FromArgb(226, 232, 240), 1f))
             {
-                g.DrawLine(penDiv, 8, 68, Width - 8, 68);
+                g.DrawLine(penDiv, Sx(8), Sy(68), Width - Sx(8), Sy(68));
             }
 
             // 4. HIỂN THỊ CẤU HÌNH & LINH KIỆN VÀ TÌNH TRẠNG THIẾT BỊ TRỰC TIẾP TRÊN Ô GIAO DIỆN
-            int tbStartY = 72;
-            int tbLineH = 20;
+            int tbStartY = Sy(72);
+            int tbLineH = Sy(20);
 
-            using (Font fontHeaderTB = new Font("Segoe UI", 7F, FontStyle.Bold))
+            using (Font fontHeaderTB = new Font("Segoe UI", Fpt(7F), FontStyle.Bold))
             using (SolidBrush brushHeaderTB = new SolidBrush(Color.FromArgb(71, 85, 105)))
             {
-                g.DrawString($"CẤU HÌNH LINH KIỆN ({Data.DanhSachThietBi.Count}):", fontHeaderTB, brushHeaderTB, new PointF(8, tbStartY));
+                g.DrawString($"CẤU HÌNH LINH KIỆN ({Data.DanhSachThietBi.Count}):", fontHeaderTB, brushHeaderTB, new PointF(Sx(8), tbStartY));
             }
-            tbStartY += 14;
+            tbStartY += Sy(14);
 
             if (Data.DanhSachThietBi.Count == 0)
             {
-                using (Font fontNone = new Font("Segoe UI", 7.5F, FontStyle.Italic))
+                using (Font fontNone = new Font("Segoe UI", Fpt(7.5F), FontStyle.Italic))
                 using (SolidBrush brushNone = new SolidBrush(Color.FromArgb(148, 163, 184)))
                 {
-                    g.DrawString("(Chưa gắn linh kiện)", fontNone, brushNone, new PointF(18, tbStartY + 8));
+                    g.DrawString("(Chưa gắn linh kiện)", fontNone, brushNone, new PointF(Sx(18), tbStartY + Sy(8)));
                 }
             }
             else
@@ -441,15 +485,15 @@ namespace QuanLyPhongMay.Views
                 int maxHienThi = 4;
                 int count = Math.Min(Data.DanhSachThietBi.Count, maxHienThi);
 
-                using (Font fontTenTB = new Font("Segoe UI", 7.5F, FontStyle.Regular))
-                using (Font fontBadgetTB = new Font("Segoe UI", 6.5F, FontStyle.Bold))
+                using (Font fontTenTB = new Font("Segoe UI", Fpt(7.5F), FontStyle.Regular))
+                using (Font fontBadgetTB = new Font("Segoe UI", Fpt(6.5F), FontStyle.Bold))
                 {
                     for (int i = 0; i < count; i++)
                     {
                         var tb = Data.DanhSachThietBi[i];
                         int itemY = tbStartY + i * tbLineH;
 
-                        Rectangle itemRect = new Rectangle(8, itemY, Width - 16, 18);
+                        Rectangle itemRect = new Rectangle(Sx(8), itemY, Width - Sx(16), Sy(18));
                         bool isLoi = tb.TrangThai.Equals("Hư hỏng", StringComparison.OrdinalIgnoreCase);
 
                         // Nền cho linh kiện hỏng
@@ -471,11 +515,11 @@ namespace QuanLyPhongMay.Views
 
                         using (SolidBrush brushText = new SolidBrush(textCol))
                         {
-                            g.DrawString(displayStr, fontTenTB, brushText, new PointF(10, itemY + 1));
+                            g.DrawString(displayStr, fontTenTB, brushText, new PointF(Sx(10), itemY + Sy(1)));
                         }
 
                         // Badge trạng thái linh kiện bên phải: [🟢 OK] hoặc [🔴 LỖI]
-                        Rectangle statusBadgeRect = new Rectangle(Width - 44, itemY + 2, 34, 14);
+                        Rectangle statusBadgeRect = new Rectangle(Width - Sx(44), itemY + Sy(2), Sx(34), Sy(14));
                         Color badgeBg = isLoi ? Color.FromArgb(239, 68, 68) : Color.FromArgb(209, 250, 229);
                         Color badgeText = isLoi ? Color.White : Color.FromArgb(6, 95, 70);
                         string badgeStr = isLoi ? "HỎNG" : "OK";
@@ -493,21 +537,21 @@ namespace QuanLyPhongMay.Views
                     if (Data.DanhSachThietBi.Count > maxHienThi)
                     {
                         int extra = Data.DanhSachThietBi.Count - maxHienThi;
-                        using (Font fontExtra = new Font("Segoe UI", 6.5F, FontStyle.Italic))
+                        using (Font fontExtra = new Font("Segoe UI", Fpt(6.5F), FontStyle.Italic))
                         using (SolidBrush brushExtra = new SolidBrush(Color.FromArgb(100, 116, 139)))
                         {
-                            g.DrawString($"+{extra} linh kiện khác...", fontExtra, brushExtra, new PointF(10, tbStartY + maxHienThi * tbLineH));
+                            g.DrawString($"+{extra} linh kiện khác...", fontExtra, brushExtra, new PointF(Sx(10), tbStartY + maxHienThi * tbLineH));
                         }
                     }
                 }
             }
 
             // 5. Tọa độ nhỏ hiển thị ở đáy
-            using (Font fontCoord = new Font("Segoe UI", 7F, FontStyle.Regular))
+            using (Font fontCoord = new Font("Segoe UI", Fpt(7F), FontStyle.Regular))
             using (SolidBrush brushCoord = new SolidBrush(Color.FromArgb(148, 163, 184)))
             {
                 StringFormat sfCoord = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-                Rectangle coordRect = new Rectangle(0, Height - 18, Width, 16);
+                Rectangle coordRect = new Rectangle(0, Height - Sy(18), Width, Sy(16));
                 g.DrawString($"({Data.ViTriX}, {Data.ViTriY})", fontCoord, brushCoord, coordRect, sfCoord);
             }
 
@@ -515,10 +559,10 @@ namespace QuanLyPhongMay.Views
             bool isLocked = IsGlobalLocked || Data.DaKhoa;
             if (isLocked)
             {
-                using (Font fontLock = new Font("Segoe UI", 8F, FontStyle.Regular))
+                using (Font fontLock = new Font("Segoe UI", Fpt(8F), FontStyle.Regular))
                 using (SolidBrush brushLock = new SolidBrush(Color.FromArgb(220, 38, 38)))
                 {
-                    g.DrawString("🔒", fontLock, brushLock, new PointF(6, Height - 18));
+                    g.DrawString("🔒", fontLock, brushLock, new PointF(Sx(6), Height - Sy(18)));
                 }
             }
 
@@ -527,7 +571,7 @@ namespace QuanLyPhongMay.Views
             {
                 using (SolidBrush brushCheck = new SolidBrush(Color.FromArgb(37, 99, 235)))
                 {
-                    g.FillEllipse(brushCheck, Width - 14, 4, 8, 8);
+                    g.FillEllipse(brushCheck, Width - Sx(14), Sy(4), Sx(8), Sy(8));
                 }
             }
         }

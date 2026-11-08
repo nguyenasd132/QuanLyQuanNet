@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Text.Json;
 using Microsoft.Data.SqlClient;
 using QuanLyPhongMay.Models;
 
@@ -8,41 +10,81 @@ namespace QuanLyPhongMay.Utils
 {
     public static class DatabaseHelper
     {
-        // Danh sách chuỗi kết nối thử nghiệm tự động
+        // Lưu trữ cấu hình hình nền phòng máy cục bộ (dùng cho chế độ Offline / Demo hoặc đồng bộ nhanh)
+        private static readonly string LocalRoomBackgroundFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "room_backgrounds.json");
+        private static Dictionary<string, string?> _roomBackgroundCache = LoadLocalRoomBackgrounds();
+
+        private static Dictionary<string, string?> LoadLocalRoomBackgrounds()
+        {
+            try
+            {
+                if (File.Exists(LocalRoomBackgroundFile))
+                {
+                    string json = File.ReadAllText(LocalRoomBackgroundFile);
+                    return JsonSerializer.Deserialize<Dictionary<string, string?>>(json) ?? new Dictionary<string, string?>();
+                }
+            }
+            catch { }
+            return new Dictionary<string, string?>();
+        }
+
+        private static void SaveLocalRoomBackgrounds()
+        {
+            try
+            {
+                string json = JsonSerializer.Serialize(_roomBackgroundCache, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(LocalRoomBackgroundFile, json);
+            }
+            catch { }
+        }
+        // Cấu hình máy chủ SQL Server trung tâm qua mạng VPN Mesh Tailscale
+        public const string TailscaleServerEndpoint = "100.115.111.126,1433";
+        public const string DefaultDatabaseName = "QL_PhongMay";
+        public const string TailscaleConnectionString =
+            @"Server=100.115.111.126,1433;Database=QL_PhongMay;User Id=sa;Password=123456;TrustServerCertificate=True;Encrypt=False;Connect Timeout=8;MultipleActiveResultSets=True;";
+
+        // Danh sách chuỗi kết nối thử nghiệm tự động (Luôn ưu tiên máy chủ Tailscale 100.115.111.126,1433 cho mọi thành viên clone từ GitHub)
         private static readonly string[] CandidateConnectionStrings = new string[]
         {
-            @"Server=.\SQLEXPRESS;Database=QL_PhongMay;Integrated Security=True;TrustServerCertificate=True;",
-            @"Server=localhost;Database=QL_PhongMay;Integrated Security=True;TrustServerCertificate=True;",
-            @"Server=(local);Database=QL_PhongMay;Integrated Security=True;TrustServerCertificate=True;",
-            @"Server=localhost\SQLEXPRESS;Database=QL_PhongMay;Integrated Security=True;TrustServerCertificate=True;"
+            TailscaleConnectionString,
+            @"Server=.\SQLEXPRESS;Database=QL_PhongMay;Integrated Security=True;TrustServerCertificate=True;Connect Timeout=5;",
+            @"Server=localhost;Database=QL_PhongMay;Integrated Security=True;TrustServerCertificate=True;Connect Timeout=5;",
+            @"Server=(local);Database=QL_PhongMay;Integrated Security=True;TrustServerCertificate=True;Connect Timeout=5;",
+            @"Server=localhost\SQLEXPRESS;Database=QL_PhongMay;Integrated Security=True;TrustServerCertificate=True;Connect Timeout=5;"
         };
 
-        public static string CurrentConnectionString { get; set; } = CandidateConnectionStrings[0];
+        public static string CurrentConnectionString { get; set; } = TailscaleConnectionString;
         public static bool IsConnectedToSql { get; private set; } = false;
+        public static bool IsTailscaleConnected { get; private set; } = false;
 
         public static bool KiemTraKetNoi(out string thongBao)
         {
-            // Thử chuỗi hiện tại trước
-            if (ThuKetNoi(CurrentConnectionString, out thongBao))
+            // 1. Luôn ưu tiên kết nối trực tiếp vào máy chủ Tailscale 100.115.111.126,1433 trước tiên
+            if (ThuKetNoi(TailscaleConnectionString, out thongBao))
             {
+                CurrentConnectionString = TailscaleConnectionString;
                 IsConnectedToSql = true;
+                IsTailscaleConnected = true;
                 return true;
             }
 
-            // Nếu thất bại, tự động dò các server candidates
+            // 2. Nếu chưa bật Tailscale hoặc không thông mạng, thử chuỗi hiện tại hoặc các instance SQL Server cục bộ
             foreach (var connStr in CandidateConnectionStrings)
             {
-                if (connStr != CurrentConnectionString && ThuKetNoi(connStr, out string msg))
+                if (connStr == TailscaleConnectionString) continue;
+                if (ThuKetNoi(connStr, out string msg))
                 {
                     CurrentConnectionString = connStr;
                     IsConnectedToSql = true;
-                    thongBao = $"Đã tự động kết nối qua: {connStr}";
+                    IsTailscaleConnected = connStr.Contains(TailscaleServerEndpoint, StringComparison.OrdinalIgnoreCase);
+                    thongBao = msg;
                     return true;
                 }
             }
 
             IsConnectedToSql = false;
-            thongBao = "Không thể kết nối tới SQL Server localhost. Ứng dụng sẽ hoạt động ở chế độ Demo/Offline.";
+            IsTailscaleConnected = false;
+            thongBao = $"Không thể kết nối tới SQL Server Tailscale ({TailscaleServerEndpoint}). Vui lòng kiểm tra đã bật Tailscale VPN chưa (Đang chạy chế độ Demo/Offline).";
             return false;
         }
 
@@ -53,7 +95,8 @@ namespace QuanLyPhongMay.Utils
                 using (var conn = new SqlConnection(connStr))
                 {
                     conn.Open();
-                    loi = "Kết nối thành công!";
+                    var builder = new SqlConnectionStringBuilder(connStr);
+                    loi = $"Đã kết nối SQL Server thành công tới [{builder.DataSource}] (Database: {builder.InitialCatalog})!";
                     return true;
                 }
             }
@@ -66,6 +109,20 @@ namespace QuanLyPhongMay.Utils
 
         #region Phòng Máy
 
+        private static void DamBaoCotHinhNenPhongMay(SqlConnection conn)
+        {
+            try
+            {
+                string sqlAlter = @"IF COL_LENGTH(N'dbo.PhongMay', N'HinhNen') IS NULL
+                                    ALTER TABLE PhongMay ADD HinhNen NVARCHAR(500) NULL;";
+                using (var cmd = new SqlCommand(sqlAlter, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch { }
+        }
+
         public static List<PhongMay> LayDanhSachPhongMay()
         {
             List<PhongMay> list = new List<PhongMay>();
@@ -76,17 +133,27 @@ namespace QuanLyPhongMay.Utils
                 using (var conn = new SqlConnection(CurrentConnectionString))
                 {
                     conn.Open();
-                    string sql = "SELECT MaPhong, TenPhong, ViTri, TrangThai FROM PhongMay";
+                    DamBaoCotHinhNenPhongMay(conn);
+
+                    string sql = "SELECT MaPhong, TenPhong, ViTri, TrangThai, HinhNen FROM PhongMay";
                     using (var cmd = new SqlCommand(sql, conn))
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
+                            string maPhong = reader.GetString(0);
+                            string? hinhNen = reader.IsDBNull(4) ? null : reader.GetString(4);
+                            if (string.IsNullOrWhiteSpace(hinhNen) && _roomBackgroundCache.TryGetValue(maPhong, out string? cachedPath))
+                            {
+                                hinhNen = cachedPath;
+                            }
+
                             list.Add(new PhongMay(
-                                reader.GetString(0),
+                                maPhong,
                                 reader.GetString(1),
                                 reader.IsDBNull(2) ? "" : reader.GetString(2),
-                                reader.IsDBNull(3) ? "Đang hoạt động" : reader.GetString(3)
+                                reader.IsDBNull(3) ? "Đang hoạt động" : reader.GetString(3),
+                                hinhNen
                             ));
                         }
                     }
@@ -101,13 +168,51 @@ namespace QuanLyPhongMay.Utils
             return list;
         }
 
+        public static bool CapNhatHinhNenPhong(string maPhong, string? duongDanHinhNen)
+        {
+            _roomBackgroundCache[maPhong] = duongDanHinhNen;
+            SaveLocalRoomBackgrounds();
+
+            if (!IsConnectedToSql) return true;
+
+            try
+            {
+                using (var conn = new SqlConnection(CurrentConnectionString))
+                {
+                    conn.Open();
+                    DamBaoCotHinhNenPhongMay(conn);
+
+                    string sql = "UPDATE PhongMay SET HinhNen = @hinhNen WHERE MaPhong = @maPhong";
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@hinhNen", (object?)duongDanHinhNen ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@maPhong", maPhong);
+                        return cmd.ExecuteNonQuery() > 0;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private static List<PhongMay> LayPhongMayMau()
         {
-            return new List<PhongMay>
+            var list = new List<PhongMay>
             {
                 new PhongMay("PM01", "Phòng Thực Hành C/C++", "Lầu 1 - Tòa A", "Đang hoạt động"),
-                new PhongMay("PM02", "Phòng Mạng Máy Tính", "Lầu 2 - Tòa A", "Đang hoạt động")
+                new PhongMay("PM02", "Phòng Mạng Máy Tính", "Lầu 2 - Tòa A", "Đang hoạt động"),
+                new PhongMay("PM03", "Phòng Đồ Họa & AI", "Lầu 3 - Tòa B", "Bảo trì định kỳ")
             };
+            foreach (var p in list)
+            {
+                if (_roomBackgroundCache.TryGetValue(p.MaPhong, out string? cachedPath))
+                {
+                    p.HinhNen = cachedPath;
+                }
+            }
+            return list;
         }
 
         #endregion
@@ -230,6 +335,30 @@ namespace QuanLyPhongMay.Utils
                         cmd.Parameters.AddWithValue("@y", may.ViTriY);
                         cmd.Parameters.AddWithValue("@ma", may.MaMay);
                         return cmd.ExecuteNonQuery() > 0;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool KiemTraMaMayTonTai(string maMay)
+        {
+            if (string.IsNullOrWhiteSpace(maMay) || !IsConnectedToSql) return false;
+
+            try
+            {
+                using (var conn = new SqlConnection(CurrentConnectionString))
+                {
+                    conn.Open();
+                    string sql = "SELECT COUNT(1) FROM MayTinh WHERE MaMay = @ma";
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ma", maMay.Trim());
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        return count > 0;
                     }
                 }
             }

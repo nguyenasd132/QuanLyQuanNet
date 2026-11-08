@@ -23,7 +23,6 @@ D:\@HocTap\Nam3\LapTrinhWin\CK\QuanLyQuanNet\QuanLyPhongMay\bin\Debug\net10.0-wi
 D:\@HocTap\Nam3\LapTrinhWin\CK\QuanLyQuanNet\QuanLyPhongMay\bin\Debug\net10.0-windows\QuanLyPhongMay.runtimeconfig.json
 D:\@HocTap\Nam3\LapTrinhWin\CK\QuanLyQuanNet\QuanLyPhongMay\bin\Debug\net10.0-windows\QuanLyPhongMay.dll
 D:\@HocTap\Nam3\LapTrinhWin\CK\QuanLyQuanNet\QuanLyPhongMay\bin\Debug\net10.0-windows\QuanLyPhongMay.pdb
-D:\@HocTap\Nam3\LapTrinhWin\CK\QuanLyQuanNet\QuanLyPhongMay\obj\Debug\net10.0-windows\QuanLyPhongMay.Form1.resources
 D:\@HocTap\Nam3\LapTrinhWin\CK\QuanLyQuanNet\QuanLyPhongMay\obj\Debug\net10.0-windows\QuanLyPhongMay.Views.FormSoDo.resources
 D:\@HocTap\Nam3\LapTrinhWin\CK\QuanLyQuanNet\QuanLyPhongMay\obj\Debug\net10.0-windows\QuanLyPhongMay.csproj.GenerateResource.cache
 D:\@HocTap\Nam3\LapTrinhWin\CK\QuanLyQuanNet\QuanLyPhongMay\obj\Debug\net10.0-windows\QuanLyPhongMay.GeneratedMSBuildEditorConfig.editorconfig

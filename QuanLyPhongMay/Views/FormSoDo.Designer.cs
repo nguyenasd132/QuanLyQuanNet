@@ -38,8 +38,6 @@ namespace QuanLyPhongMay.Views
             lblSubtitle = new Label();
             lblTitle = new Label();
             pnlToolbar = new Panel();
-            pnlSearch = new Panel();
-            txtTimKiem = new TextBox();
             flowButtons = new FlowLayoutPanel();
             lblChonPhong = new Label();
             cboPhongMay = new ComboBox();
@@ -48,15 +46,22 @@ namespace QuanLyPhongMay.Views
             btnXoaMay = new Button();
             btnKhoaViTri = new Button();
             btnSapXepLuoi = new Button();
+            btnHinhNenPhong = new Button();
             btnInBienBan = new Button();
             btnKetNoiCSDL = new Button();
             btnTaiLai = new Button();
             chkHutLuoi = new CheckBox();
+            pnlSearch = new Panel();
+            txtTimKiem = new TextBox();
             splitMain = new SplitContainer();
             panelSoDo = new MapCanvasPanel();
             mapContextMenu = new ContextMenuStrip(components);
             itemThemTaiCho = new ToolStripMenuItem();
             itemKhoaTatCa = new ToolStripMenuItem();
+            sepMapMenu = new ToolStripSeparator();
+            itemChonHinhNen = new ToolStripMenuItem();
+            itemTaoBanDoMau = new ToolStripMenuItem();
+            itemXoaHinhNen = new ToolStripMenuItem();
             pnlSidebar = new Panel();
             grpThem = new GroupBox();
             btnThemNhanh = new Button();
@@ -102,8 +107,8 @@ namespace QuanLyPhongMay.Views
             pnlHeader.SuspendLayout();
             pnlStats.SuspendLayout();
             pnlToolbar.SuspendLayout();
-            pnlSearch.SuspendLayout();
             flowButtons.SuspendLayout();
+            pnlSearch.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
             splitMain.Panel1.SuspendLayout();
             splitMain.Panel2.SuspendLayout();
@@ -231,41 +236,24 @@ namespace QuanLyPhongMay.Views
             // 
             // pnlToolbar
             // 
+            pnlToolbar.AutoSize = true;
+            pnlToolbar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             pnlToolbar.BackColor = Color.White;
-            pnlToolbar.Controls.Add(pnlSearch);
             pnlToolbar.Controls.Add(flowButtons);
+            pnlToolbar.Controls.Add(pnlSearch);
             pnlToolbar.Dock = DockStyle.Top;
             pnlToolbar.Location = new Point(0, 93);
             pnlToolbar.Margin = new Padding(3, 4, 3, 4);
+            pnlToolbar.MinimumSize = new Size(0, 66);
             pnlToolbar.Name = "pnlToolbar";
-            pnlToolbar.Padding = new Padding(11, 11, 11, 11);
-            pnlToolbar.Size = new Size(1554, 69);
+            pnlToolbar.Padding = new Padding(11, 8, 11, 8);
+            pnlToolbar.Size = new Size(1554, 66);
             pnlToolbar.TabIndex = 1;
-            // 
-            // pnlSearch
-            // 
-            pnlSearch.Controls.Add(txtTimKiem);
-            pnlSearch.Dock = DockStyle.Right;
-            pnlSearch.Location = new Point(1286, 11);
-            pnlSearch.Margin = new Padding(3, 4, 3, 4);
-            pnlSearch.Name = "pnlSearch";
-            pnlSearch.Size = new Size(257, 47);
-            pnlSearch.TabIndex = 1;
-            // 
-            // txtTimKiem
-            // 
-            txtTimKiem.Font = new Font("Segoe UI", 9.5F);
-            txtTimKiem.Location = new Point(6, 5);
-            txtTimKiem.Margin = new Padding(3, 4, 3, 4);
-            txtTimKiem.Name = "txtTimKiem";
-            txtTimKiem.PlaceholderText = "🔍 Tìm kiếm mã/tên máy...";
-            txtTimKiem.Size = new Size(245, 29);
-            txtTimKiem.TabIndex = 0;
-            txtTimKiem.TextChanged += TxtTimKiem_TextChanged;
             // 
             // flowButtons
             // 
             flowButtons.AutoSize = true;
+            flowButtons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             flowButtons.Controls.Add(lblChonPhong);
             flowButtons.Controls.Add(cboPhongMay);
             flowButtons.Controls.Add(btnThemMay);
@@ -273,17 +261,17 @@ namespace QuanLyPhongMay.Views
             flowButtons.Controls.Add(btnXoaMay);
             flowButtons.Controls.Add(btnKhoaViTri);
             flowButtons.Controls.Add(btnSapXepLuoi);
+            flowButtons.Controls.Add(btnHinhNenPhong);
             flowButtons.Controls.Add(btnInBienBan);
             flowButtons.Controls.Add(btnKetNoiCSDL);
             flowButtons.Controls.Add(btnTaiLai);
             flowButtons.Controls.Add(chkHutLuoi);
-            flowButtons.Dock = DockStyle.Left;
-            flowButtons.Location = new Point(11, 11);
+            flowButtons.Dock = DockStyle.Fill;
+            flowButtons.Location = new Point(11, 8);
             flowButtons.Margin = new Padding(3, 4, 3, 4);
             flowButtons.Name = "flowButtons";
-            flowButtons.Size = new Size(1731, 47);
+            flowButtons.Size = new Size(1287, 50);
             flowButtons.TabIndex = 0;
-            flowButtons.WrapContents = false;
             // 
             // lblChonPhong
             // 
@@ -404,6 +392,25 @@ namespace QuanLyPhongMay.Views
             btnSapXepLuoi.UseVisualStyleBackColor = false;
             btnSapXepLuoi.Click += BtnSapXepLuoi_Click;
             // 
+            // btnHinhNenPhong
+            // 
+            btnHinhNenPhong.AutoSize = true;
+            btnHinhNenPhong.BackColor = Color.FromArgb(14, 165, 233);
+            btnHinhNenPhong.Cursor = Cursors.Hand;
+            btnHinhNenPhong.FlatAppearance.BorderSize = 0;
+            btnHinhNenPhong.FlatStyle = FlatStyle.Flat;
+            btnHinhNenPhong.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnHinhNenPhong.ForeColor = Color.White;
+            btnHinhNenPhong.Location = new Point(1094, 0);
+            btnHinhNenPhong.Margin = new Padding(3, 0, 3, 0);
+            btnHinhNenPhong.Name = "btnHinhNenPhong";
+            btnHinhNenPhong.Padding = new Padding(9, 0, 9, 0);
+            btnHinhNenPhong.Size = new Size(145, 45);
+            btnHinhNenPhong.TabIndex = 7;
+            btnHinhNenPhong.Text = "🗺️ Bản đồ nền";
+            btnHinhNenPhong.UseVisualStyleBackColor = false;
+            btnHinhNenPhong.Click += BtnHinhNenPhong_Click;
+            // 
             // btnInBienBan
             // 
             btnInBienBan.AutoSize = true;
@@ -413,7 +420,7 @@ namespace QuanLyPhongMay.Views
             btnInBienBan.FlatStyle = FlatStyle.Flat;
             btnInBienBan.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnInBienBan.ForeColor = Color.White;
-            btnInBienBan.Location = new Point(1094, 0);
+            btnInBienBan.Location = new Point(3, 45);
             btnInBienBan.Margin = new Padding(3, 0, 3, 0);
             btnInBienBan.Name = "btnInBienBan";
             btnInBienBan.Padding = new Padding(9, 0, 9, 0);
@@ -432,7 +439,7 @@ namespace QuanLyPhongMay.Views
             btnKetNoiCSDL.FlatStyle = FlatStyle.Flat;
             btnKetNoiCSDL.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnKetNoiCSDL.ForeColor = Color.FromArgb(6, 95, 70);
-            btnKetNoiCSDL.Location = new Point(1259, 0);
+            btnKetNoiCSDL.Location = new Point(168, 45);
             btnKetNoiCSDL.Margin = new Padding(3, 0, 3, 0);
             btnKetNoiCSDL.Name = "btnKetNoiCSDL";
             btnKetNoiCSDL.Padding = new Padding(9, 0, 9, 0);
@@ -451,7 +458,7 @@ namespace QuanLyPhongMay.Views
             btnTaiLai.FlatStyle = FlatStyle.Flat;
             btnTaiLai.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnTaiLai.ForeColor = Color.FromArgb(30, 41, 59);
-            btnTaiLai.Location = new Point(1439, 0);
+            btnTaiLai.Location = new Point(348, 45);
             btnTaiLai.Margin = new Padding(3, 0, 3, 0);
             btnTaiLai.Name = "btnTaiLai";
             btnTaiLai.Padding = new Padding(9, 0, 9, 0);
@@ -469,7 +476,7 @@ namespace QuanLyPhongMay.Views
             chkHutLuoi.Cursor = Cursors.Hand;
             chkHutLuoi.Font = new Font("Segoe UI", 9F);
             chkHutLuoi.ForeColor = Color.FromArgb(71, 85, 105);
-            chkHutLuoi.Location = new Point(1570, 11);
+            chkHutLuoi.Location = new Point(479, 56);
             chkHutLuoi.Margin = new Padding(9, 11, 5, 0);
             chkHutLuoi.Name = "chkHutLuoi";
             chkHutLuoi.Size = new Size(156, 24);
@@ -478,12 +485,34 @@ namespace QuanLyPhongMay.Views
             chkHutLuoi.UseVisualStyleBackColor = true;
             chkHutLuoi.CheckedChanged += ChkHutLuoi_CheckedChanged;
             // 
+            // pnlSearch
+            // 
+            pnlSearch.Controls.Add(txtTimKiem);
+            pnlSearch.Dock = DockStyle.Right;
+            pnlSearch.Location = new Point(1298, 8);
+            pnlSearch.Margin = new Padding(3, 4, 3, 4);
+            pnlSearch.Name = "pnlSearch";
+            pnlSearch.Size = new Size(245, 50);
+            pnlSearch.TabIndex = 1;
+            // 
+            // txtTimKiem
+            // 
+            txtTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtTimKiem.Font = new Font("Segoe UI", 9.5F);
+            txtTimKiem.Location = new Point(6, 7);
+            txtTimKiem.Margin = new Padding(3, 4, 3, 4);
+            txtTimKiem.Name = "txtTimKiem";
+            txtTimKiem.PlaceholderText = "🔍 Tìm kiếm mã/tên máy...";
+            txtTimKiem.Size = new Size(233, 29);
+            txtTimKiem.TabIndex = 0;
+            txtTimKiem.TextChanged += TxtTimKiem_TextChanged;
+            // 
             // splitMain
             // 
             splitMain.BackColor = Color.FromArgb(226, 232, 240);
             splitMain.Dock = DockStyle.Fill;
             splitMain.FixedPanel = FixedPanel.Panel2;
-            splitMain.Location = new Point(0, 162);
+            splitMain.Location = new Point(0, 159);
             splitMain.Margin = new Padding(3, 4, 3, 4);
             splitMain.Name = "splitMain";
             // 
@@ -494,8 +523,8 @@ namespace QuanLyPhongMay.Views
             // splitMain.Panel2
             // 
             splitMain.Panel2.Controls.Add(pnlSidebar);
-            splitMain.Size = new Size(1554, 945);
-            splitMain.SplitterDistance = 1072;
+            splitMain.Size = new Size(1554, 948);
+            splitMain.SplitterDistance = 1051;
             splitMain.SplitterWidth = 7;
             splitMain.TabIndex = 2;
             // 
@@ -508,7 +537,7 @@ namespace QuanLyPhongMay.Views
             panelSoDo.Location = new Point(0, 0);
             panelSoDo.Margin = new Padding(3, 4, 3, 4);
             panelSoDo.Name = "panelSoDo";
-            panelSoDo.Size = new Size(1072, 945);
+            panelSoDo.Size = new Size(1051, 948);
             panelSoDo.TabIndex = 0;
             panelSoDo.MouseDown += PanelSoDo_MouseDown;
             // 
@@ -516,23 +545,49 @@ namespace QuanLyPhongMay.Views
             // 
             mapContextMenu.Font = new Font("Segoe UI", 9.5F);
             mapContextMenu.ImageScalingSize = new Size(20, 20);
-            mapContextMenu.Items.AddRange(new ToolStripItem[] { itemThemTaiCho, itemKhoaTatCa });
+            mapContextMenu.Items.AddRange(new ToolStripItem[] { itemThemTaiCho, itemKhoaTatCa, sepMapMenu, itemChonHinhNen, itemTaoBanDoMau, itemXoaHinhNen });
             mapContextMenu.Name = "mapContextMenu";
-            mapContextMenu.Size = new Size(310, 56);
+            mapContextMenu.Size = new Size(373, 140);
             // 
             // itemThemTaiCho
             // 
             itemThemTaiCho.Name = "itemThemTaiCho";
-            itemThemTaiCho.Size = new Size(309, 26);
+            itemThemTaiCho.Size = new Size(372, 26);
             itemThemTaiCho.Text = "➕ Thêm máy tại vị trí này";
             itemThemTaiCho.Click += ItemThemTaiCho_Click;
             // 
             // itemKhoaTatCa
             // 
             itemKhoaTatCa.Name = "itemKhoaTatCa";
-            itemKhoaTatCa.Size = new Size(309, 26);
+            itemKhoaTatCa.Size = new Size(372, 26);
             itemKhoaTatCa.Text = "🔒 Khóa / Mở khóa toàn bộ vị trí";
             itemKhoaTatCa.Click += ItemKhoaTatCa_Click;
+            // 
+            // sepMapMenu
+            // 
+            sepMapMenu.Name = "sepMapMenu";
+            sepMapMenu.Size = new Size(369, 6);
+            // 
+            // itemChonHinhNen
+            // 
+            itemChonHinhNen.Name = "itemChonHinhNen";
+            itemChonHinhNen.Size = new Size(372, 26);
+            itemChonHinhNen.Text = "🖼️ Nhập ảnh bản đồ nền cho phòng này...";
+            itemChonHinhNen.Click += ItemChonHinhNen_Click;
+            // 
+            // itemTaoBanDoMau
+            // 
+            itemTaoBanDoMau.Name = "itemTaoBanDoMau";
+            itemTaoBanDoMau.Size = new Size(372, 26);
+            itemTaoBanDoMau.Text = "📐 Tạo bản đồ mặt bằng kiến trúc mẫu";
+            itemTaoBanDoMau.Click += ItemTaoBanDoMau_Click;
+            // 
+            // itemXoaHinhNen
+            // 
+            itemXoaHinhNen.Name = "itemXoaHinhNen";
+            itemXoaHinhNen.Size = new Size(372, 26);
+            itemXoaHinhNen.Text = "🗑️ Xóa ảnh bản đồ nền của phòng";
+            itemXoaHinhNen.Click += ItemXoaHinhNen_Click;
             // 
             // pnlSidebar
             // 
@@ -545,7 +600,7 @@ namespace QuanLyPhongMay.Views
             pnlSidebar.Margin = new Padding(3, 4, 3, 4);
             pnlSidebar.Name = "pnlSidebar";
             pnlSidebar.Padding = new Padding(11, 13, 11, 13);
-            pnlSidebar.Size = new Size(475, 945);
+            pnlSidebar.Size = new Size(496, 948);
             pnlSidebar.TabIndex = 0;
             // 
             // grpThem
@@ -565,7 +620,7 @@ namespace QuanLyPhongMay.Views
             grpThem.Margin = new Padding(3, 4, 3, 4);
             grpThem.Name = "grpThem";
             grpThem.Padding = new Padding(3, 4, 3, 4);
-            grpThem.Size = new Size(453, 247);
+            grpThem.Size = new Size(474, 247);
             grpThem.TabIndex = 1;
             grpThem.TabStop = false;
             grpThem.Text = "➕ Thêm máy tính vào phòng";
@@ -582,7 +637,7 @@ namespace QuanLyPhongMay.Views
             btnThemNhanh.Location = new Point(109, 195);
             btnThemNhanh.Margin = new Padding(3, 4, 3, 4);
             btnThemNhanh.Name = "btnThemNhanh";
-            btnThemNhanh.Size = new Size(327, 43);
+            btnThemNhanh.Size = new Size(348, 43);
             btnThemNhanh.TabIndex = 7;
             btnThemNhanh.Text = "➕ Thêm vào sơ đồ phòng máy";
             btnThemNhanh.UseVisualStyleBackColor = false;
@@ -613,7 +668,7 @@ namespace QuanLyPhongMay.Views
             cboThemTrangThai.Location = new Point(109, 117);
             cboThemTrangThai.Margin = new Padding(3, 4, 3, 4);
             cboThemTrangThai.Name = "cboThemTrangThai";
-            cboThemTrangThai.Size = new Size(326, 28);
+            cboThemTrangThai.Size = new Size(347, 28);
             cboThemTrangThai.TabIndex = 5;
             // 
             // lblTTT
@@ -633,7 +688,7 @@ namespace QuanLyPhongMay.Views
             txtThemTen.Location = new Point(109, 75);
             txtThemTen.Margin = new Padding(3, 4, 3, 4);
             txtThemTen.Name = "txtThemTen";
-            txtThemTen.Size = new Size(326, 27);
+            txtThemTen.Size = new Size(347, 27);
             txtThemTen.TabIndex = 3;
             // 
             // lblTTen
@@ -653,7 +708,7 @@ namespace QuanLyPhongMay.Views
             txtThemMa.Location = new Point(109, 32);
             txtThemMa.Margin = new Padding(3, 4, 3, 4);
             txtThemMa.Name = "txtThemMa";
-            txtThemMa.Size = new Size(326, 27);
+            txtThemMa.Size = new Size(347, 27);
             txtThemMa.TabIndex = 1;
             // 
             // lblTMa
@@ -690,7 +745,7 @@ namespace QuanLyPhongMay.Views
             grpChiTiet.Margin = new Padding(3, 4, 3, 4);
             grpChiTiet.Name = "grpChiTiet";
             grpChiTiet.Padding = new Padding(3, 4, 3, 4);
-            grpChiTiet.Size = new Size(453, 653);
+            grpChiTiet.Size = new Size(474, 653);
             grpChiTiet.TabIndex = 0;
             grpChiTiet.TabStop = false;
             grpChiTiet.Text = "📌 Thông tin máy && Cấu hình thiết bị";
@@ -710,7 +765,7 @@ namespace QuanLyPhongMay.Views
             tblNutHanhDong.Name = "tblNutHanhDong";
             tblNutHanhDong.RowCount = 1;
             tblNutHanhDong.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tblNutHanhDong.Size = new Size(418, 45);
+            tblNutHanhDong.Size = new Size(439, 45);
             tblNutHanhDong.TabIndex = 15;
             // 
             // btnChiTietCapNhat
@@ -725,7 +780,7 @@ namespace QuanLyPhongMay.Views
             btnChiTietCapNhat.Location = new Point(0, 0);
             btnChiTietCapNhat.Margin = new Padding(0, 0, 3, 0);
             btnChiTietCapNhat.Name = "btnChiTietCapNhat";
-            btnChiTietCapNhat.Size = new Size(136, 45);
+            btnChiTietCapNhat.Size = new Size(143, 45);
             btnChiTietCapNhat.TabIndex = 0;
             btnChiTietCapNhat.Text = "💾 Lưu máy";
             btnChiTietCapNhat.UseVisualStyleBackColor = false;
@@ -740,10 +795,10 @@ namespace QuanLyPhongMay.Views
             btnChiTietInPhieu.FlatStyle = FlatStyle.Flat;
             btnChiTietInPhieu.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
             btnChiTietInPhieu.ForeColor = Color.White;
-            btnChiTietInPhieu.Location = new Point(142, 0);
+            btnChiTietInPhieu.Location = new Point(149, 0);
             btnChiTietInPhieu.Margin = new Padding(3, 0, 3, 0);
             btnChiTietInPhieu.Name = "btnChiTietInPhieu";
-            btnChiTietInPhieu.Size = new Size(133, 45);
+            btnChiTietInPhieu.Size = new Size(140, 45);
             btnChiTietInPhieu.TabIndex = 1;
             btnChiTietInPhieu.Text = "🖨️ In phiếu";
             btnChiTietInPhieu.UseVisualStyleBackColor = false;
@@ -758,10 +813,10 @@ namespace QuanLyPhongMay.Views
             btnChiTietXoa.FlatStyle = FlatStyle.Flat;
             btnChiTietXoa.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
             btnChiTietXoa.ForeColor = Color.White;
-            btnChiTietXoa.Location = new Point(281, 0);
+            btnChiTietXoa.Location = new Point(295, 0);
             btnChiTietXoa.Margin = new Padding(3, 0, 0, 0);
             btnChiTietXoa.Name = "btnChiTietXoa";
-            btnChiTietXoa.Size = new Size(137, 45);
+            btnChiTietXoa.Size = new Size(144, 45);
             btnChiTietXoa.TabIndex = 2;
             btnChiTietXoa.Text = "🗑️ Xóa máy";
             btnChiTietXoa.UseVisualStyleBackColor = false;
@@ -782,7 +837,7 @@ namespace QuanLyPhongMay.Views
             tblNutThietBi.Name = "tblNutThietBi";
             tblNutThietBi.RowCount = 1;
             tblNutThietBi.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tblNutThietBi.Size = new Size(418, 43);
+            tblNutThietBi.Size = new Size(439, 43);
             tblNutThietBi.TabIndex = 14;
             // 
             // btnSidebarGanLinhKien
@@ -797,7 +852,7 @@ namespace QuanLyPhongMay.Views
             btnSidebarGanLinhKien.Location = new Point(0, 0);
             btnSidebarGanLinhKien.Margin = new Padding(0, 0, 3, 0);
             btnSidebarGanLinhKien.Name = "btnSidebarGanLinhKien";
-            btnSidebarGanLinhKien.Size = new Size(136, 43);
+            btnSidebarGanLinhKien.Size = new Size(143, 43);
             btnSidebarGanLinhKien.TabIndex = 0;
             btnSidebarGanLinhKien.Text = "➕ Gắn TB";
             btnSidebarGanLinhKien.UseVisualStyleBackColor = false;
@@ -812,10 +867,10 @@ namespace QuanLyPhongMay.Views
             btnSidebarDoiStatusTB.FlatStyle = FlatStyle.Flat;
             btnSidebarDoiStatusTB.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
             btnSidebarDoiStatusTB.ForeColor = Color.White;
-            btnSidebarDoiStatusTB.Location = new Point(142, 0);
+            btnSidebarDoiStatusTB.Location = new Point(149, 0);
             btnSidebarDoiStatusTB.Margin = new Padding(3, 0, 3, 0);
             btnSidebarDoiStatusTB.Name = "btnSidebarDoiStatusTB";
-            btnSidebarDoiStatusTB.Size = new Size(133, 43);
+            btnSidebarDoiStatusTB.Size = new Size(140, 43);
             btnSidebarDoiStatusTB.TabIndex = 1;
             btnSidebarDoiStatusTB.Text = "🔄 Đổi TT";
             btnSidebarDoiStatusTB.UseVisualStyleBackColor = false;
@@ -830,10 +885,10 @@ namespace QuanLyPhongMay.Views
             btnSidebarQuanLyTB.FlatStyle = FlatStyle.Flat;
             btnSidebarQuanLyTB.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
             btnSidebarQuanLyTB.ForeColor = Color.White;
-            btnSidebarQuanLyTB.Location = new Point(281, 0);
+            btnSidebarQuanLyTB.Location = new Point(295, 0);
             btnSidebarQuanLyTB.Margin = new Padding(3, 0, 0, 0);
             btnSidebarQuanLyTB.Name = "btnSidebarQuanLyTB";
-            btnSidebarQuanLyTB.Size = new Size(137, 43);
+            btnSidebarQuanLyTB.Size = new Size(144, 43);
             btnSidebarQuanLyTB.TabIndex = 2;
             btnSidebarQuanLyTB.Text = "⚙️ Quản lý";
             btnSidebarQuanLyTB.UseVisualStyleBackColor = false;
@@ -858,7 +913,7 @@ namespace QuanLyPhongMay.Views
             dgvLinhKienMay.RowHeadersWidth = 51;
             dgvLinhKienMay.RowTemplate.Height = 28;
             dgvLinhKienMay.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvLinhKienMay.Size = new Size(418, 189);
+            dgvLinhKienMay.Size = new Size(439, 189);
             dgvLinhKienMay.TabIndex = 13;
             dgvLinhKienMay.CellFormatting += DgvLinhKienMay_CellFormatting;
             // 
@@ -936,7 +991,7 @@ namespace QuanLyPhongMay.Views
             tblToaDo.Name = "tblToaDo";
             tblToaDo.RowCount = 1;
             tblToaDo.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tblToaDo.Size = new Size(327, 36);
+            tblToaDo.Size = new Size(348, 36);
             tblToaDo.TabIndex = 8;
             // 
             // numChiTietX
@@ -947,18 +1002,18 @@ namespace QuanLyPhongMay.Views
             numChiTietX.Margin = new Padding(0, 0, 5, 0);
             numChiTietX.Maximum = new decimal(new int[] { 4000, 0, 0, 0 });
             numChiTietX.Name = "numChiTietX";
-            numChiTietX.Size = new Size(158, 27);
+            numChiTietX.Size = new Size(169, 27);
             numChiTietX.TabIndex = 0;
             // 
             // numChiTietY
             // 
             numChiTietY.Dock = DockStyle.Fill;
             numChiTietY.Font = new Font("Segoe UI", 9F);
-            numChiTietY.Location = new Point(168, 0);
+            numChiTietY.Location = new Point(179, 0);
             numChiTietY.Margin = new Padding(5, 0, 0, 0);
             numChiTietY.Maximum = new decimal(new int[] { 4000, 0, 0, 0 });
             numChiTietY.Name = "numChiTietY";
-            numChiTietY.Size = new Size(159, 27);
+            numChiTietY.Size = new Size(169, 27);
             numChiTietY.TabIndex = 1;
             // 
             // lblToaDo
@@ -980,7 +1035,7 @@ namespace QuanLyPhongMay.Views
             cboChiTietTrangThai.Location = new Point(109, 184);
             cboChiTietTrangThai.Margin = new Padding(3, 4, 3, 4);
             cboChiTietTrangThai.Name = "cboChiTietTrangThai";
-            cboChiTietTrangThai.Size = new Size(326, 28);
+            cboChiTietTrangThai.Size = new Size(347, 28);
             cboChiTietTrangThai.TabIndex = 6;
             // 
             // lblTT
@@ -1000,7 +1055,7 @@ namespace QuanLyPhongMay.Views
             txtChiTietTen.Location = new Point(109, 141);
             txtChiTietTen.Margin = new Padding(3, 4, 3, 4);
             txtChiTietTen.Name = "txtChiTietTen";
-            txtChiTietTen.Size = new Size(326, 27);
+            txtChiTietTen.Size = new Size(347, 27);
             txtChiTietTen.TabIndex = 4;
             // 
             // lblTen
@@ -1022,7 +1077,7 @@ namespace QuanLyPhongMay.Views
             txtChiTietMa.Margin = new Padding(3, 4, 3, 4);
             txtChiTietMa.Name = "txtChiTietMa";
             txtChiTietMa.ReadOnly = true;
-            txtChiTietMa.Size = new Size(326, 27);
+            txtChiTietMa.Size = new Size(347, 27);
             txtChiTietMa.TabIndex = 2;
             // 
             // lblMa
@@ -1043,7 +1098,7 @@ namespace QuanLyPhongMay.Views
             lblChiTietBanner.ForeColor = Color.FromArgb(100, 116, 139);
             lblChiTietBanner.Location = new Point(17, 32);
             lblChiTietBanner.Name = "lblChiTietBanner";
-            lblChiTietBanner.Size = new Size(418, 59);
+            lblChiTietBanner.Size = new Size(439, 59);
             lblChiTietBanner.TabIndex = 0;
             lblChiTietBanner.Text = "Chưa chọn máy nào\r\n(Nhấp chuột vào máy trên sơ đồ)";
             lblChiTietBanner.TextAlign = ContentAlignment.MiddleCenter;
@@ -1100,7 +1155,6 @@ namespace QuanLyPhongMay.Views
             Controls.Add(pnlToolbar);
             Controls.Add(pnlHeader);
             Controls.Add(statusStrip);
-            Font = new Font("Segoe UI", 9F);
             Margin = new Padding(3, 4, 3, 4);
             MinimumSize = new Size(1140, 851);
             Name = "FormSoDo";
@@ -1112,10 +1166,10 @@ namespace QuanLyPhongMay.Views
             pnlStats.PerformLayout();
             pnlToolbar.ResumeLayout(false);
             pnlToolbar.PerformLayout();
-            pnlSearch.ResumeLayout(false);
-            pnlSearch.PerformLayout();
             flowButtons.ResumeLayout(false);
             flowButtons.PerformLayout();
+            pnlSearch.ResumeLayout(false);
+            pnlSearch.PerformLayout();
             splitMain.Panel1.ResumeLayout(false);
             splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitMain).EndInit();
@@ -1159,6 +1213,7 @@ namespace QuanLyPhongMay.Views
         private System.Windows.Forms.Button btnXoaMay;
         private System.Windows.Forms.Button btnKhoaViTri;
         private System.Windows.Forms.Button btnSapXepLuoi;
+        private System.Windows.Forms.Button btnHinhNenPhong;
         private System.Windows.Forms.Button btnInBienBan;
         private System.Windows.Forms.Button btnKetNoiCSDL;
         private System.Windows.Forms.Button btnTaiLai;
@@ -1218,5 +1273,9 @@ namespace QuanLyPhongMay.Views
         private System.Windows.Forms.ContextMenuStrip mapContextMenu;
         private System.Windows.Forms.ToolStripMenuItem itemThemTaiCho;
         private System.Windows.Forms.ToolStripMenuItem itemKhoaTatCa;
+        private System.Windows.Forms.ToolStripSeparator sepMapMenu;
+        private System.Windows.Forms.ToolStripMenuItem itemChonHinhNen;
+        private System.Windows.Forms.ToolStripMenuItem itemTaoBanDoMau;
+        private System.Windows.Forms.ToolStripMenuItem itemXoaHinhNen;
     }
 }

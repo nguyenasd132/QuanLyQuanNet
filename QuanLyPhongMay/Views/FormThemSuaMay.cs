@@ -10,9 +10,9 @@ namespace QuanLyPhongMay.Views
         public MayTinh MayTinhData { get; private set; }
         public bool IsEditMode { get; private set; }
 
-        public FormThemSuaMay(MayTinh? may = null, int defaultX = 20, int defaultY = 20)
+        public FormThemSuaMay(MayTinh? may = null, int defaultX = 20, int defaultY = 20, bool isEditMode = true)
         {
-            IsEditMode = may != null;
+            IsEditMode = may != null && isEditMode;
             MayTinhData = may != null 
                 ? new MayTinh(may.MaMay, may.TenMay, may.TrangThai, may.ViTriX, may.ViTriY, may.MaPhong, may.GhiChu, may.DaKhoa)
                 : new MayTinh("", "", "Hoạt động", defaultX, defaultY, "PM01", "", false);
@@ -20,6 +20,22 @@ namespace QuanLyPhongMay.Views
             InitializeComponent();
             ApplyModeUI();
             LoadDataToUI();
+
+            this.Shown += (s, e) =>
+            {
+                if (!IsEditMode)
+                {
+                    txtMaMay.ReadOnly = false;
+                    txtMaMay.Enabled = true;
+                    txtMaMay.Focus();
+                    txtMaMay.SelectAll();
+                }
+                else
+                {
+                    txtTenMay.Focus();
+                    txtTenMay.SelectAll();
+                }
+            };
         }
 
         private void ApplyModeUI()
@@ -31,6 +47,7 @@ namespace QuanLyPhongMay.Views
                 lblHeaderTitle.Text = "✏️ CẬP NHẬT MÁY TÍNH";
                 lblHeaderSub.Text = "Chỉnh sửa thông số, trạng thái và vị trí trên sơ đồ";
                 txtMaMay.ReadOnly = true;
+                txtMaMay.TabStop = false;
                 txtMaMay.BackColor = Color.FromArgb(241, 245, 249);
                 btnLuu.Text = "💾 Cập nhật";
                 btnLuu.BackColor = Color.FromArgb(37, 99, 235);
@@ -40,8 +57,10 @@ namespace QuanLyPhongMay.Views
                 this.Text = "Thêm máy tính mới";
                 pnlHeader.BackColor = Color.FromArgb(16, 185, 129);
                 lblHeaderTitle.Text = "➕ THÊM MÁY TÍNH MỚI";
-                lblHeaderSub.Text = "Nhập thông tin máy để bố trí vào sơ đồ phòng máy";
+                lblHeaderSub.Text = "Nhập hoặc chỉnh sửa Mã máy, Tên máy để bố trí vào sơ đồ phòng máy";
                 txtMaMay.ReadOnly = false;
+                txtMaMay.Enabled = true;
+                txtMaMay.TabStop = true;
                 txtMaMay.BackColor = Color.White;
                 btnLuu.Text = "➕ Thêm máy";
                 btnLuu.BackColor = Color.FromArgb(16, 185, 129);
